@@ -20,8 +20,10 @@ function login() {
         headers: {
             "Content-Type": "application/json", // 전달하는 데이터가 JSON데이터라고 명시적으로 알려줌
         },
-        body: JSON.stringify(req)
+        body: JSON.stringify(req),
     })
+        .then((res) => res.json())
+        .then((res) => console.log(res));
 }
 // id변수명에 담긴 값을 가져오기 전에 먼저 실행되어버림.
 // 이를 방지하기 위해 HTML태그에 defer를 부여
