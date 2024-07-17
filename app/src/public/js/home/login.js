@@ -23,7 +23,16 @@ function login() {
         body: JSON.stringify(req),
     })
         .then((res) => res.json())
-        .then((res) => console.log(res));
+        .then((res) => {
+            if (res.success) {
+                location.href = "/";
+            } else {
+                alert(res.msg);
+            }
+        }).catch((err) => {
+            console.error(new Error("로그인 중 에러가 발생했습니다."));
+
+        })
 }
 // id변수명에 담긴 값을 가져오기 전에 먼저 실행되어버림.
 // 이를 방지하기 위해 HTML태그에 defer를 부여
