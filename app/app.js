@@ -5,10 +5,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-
 // 라우팅
 const home = require("./src/routes/home"); // ./routes/home/index.js 를 가져와서 사용
-
 
 // app setting
 app.set("views", "./src/views");
