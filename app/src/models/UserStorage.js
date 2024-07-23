@@ -1,14 +1,23 @@
 'use strict';
 
+const fs = require("fs").promises;
+
 class UserStorage {
-    static #users = { // #을 통해 은닉 변수로 만듦 public -> private 외부에서 불러올 수 없음
-        id: ["park", "lee", "kim"],
-        pw: ["1234", "5678", "1357"],
-        name: ["박", "이", "김"],
-    };
+    static #getUserInfo(data, id) {
+        const users = JSON.parse(data);
+        const idx = users.id.indexOf(id);
+        const usersKeys = Object.keys(users); // => [id, pw, name]
+        const userInfo = usersKeys.reduce((newUser, info) => {
+            newUser[info] = users[info][idx];
+            return newUser;
+        }, {});
+
+        return userInfo;
+    }
+
 
     static getUsers(...fields) {
-        const users = this.#users;
+        // const users = this.#users;
         const newUsers = fields.reduce((newUsers, field) => {
             if (users.hasOwnProperty(field)) {
                 newUsers[field] = users[field];
@@ -20,24 +29,25 @@ class UserStorage {
     }
 
     static getUserInfo(id) {
-        const users = this.#users;
-        const idx = users.id.indexOf(id);
-        const usersKeys = Object.keys(users); // => [id, pw, name]
-        const userInfo = usersKeys.reduce((newUser, info) => {
-            newUser[info] = users[info][idx];
-            return newUser;
-        }, {});
+        return fs
+            .readFile("./src/databases/users.json")
+            .then((data) => {
+                return this.#getUserInfo(data, id);
+            }) // 로직이 성공했을 때
+            .catch(console.error); // 에러 발생했을 때
 
-        return userInfo;
+
+
     }
 
-    static save(userInfo){
-        const users = this.#users;
+
+    static save(userInfo) {
+        // const users = this.#users;
         users.id.push(userInfo.id);
         users.name.push(userInfo.name);
         users.pw.push(userInfo.pw);
         console.log(users);
-        return {success: true};
+        return { success: true };
     }
 }
 
